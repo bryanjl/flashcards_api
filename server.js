@@ -1,6 +1,7 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const morgan = require('morgan');
+const connectDB = require('./config/db');
+const dotenv = require('dotenv');   //environment variables
+const morgan = require('morgan'); //middleware
 
 //bring in project files
 const flashcards = require('./routes/flashcards');
@@ -9,6 +10,9 @@ const flashcards = require('./routes/flashcards');
 dotenv.config({ path: './config/config.env' });
 
 const app = express();
+
+//connect to the DB
+connectDB();
 
 //body parser for JSON
 app.use(express.json());

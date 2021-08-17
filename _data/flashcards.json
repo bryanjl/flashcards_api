@@ -1,0 +1,7 @@
+{
+    "title": "TEST1",
+    "question": "WHAT IS THE TEST",
+    "answers": ["test", "test1", "test2", "test3"],
+    "correctAnswer": "test"
+
+}

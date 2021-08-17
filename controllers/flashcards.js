@@ -1,22 +1,28 @@
+const Flashcard = require('../models/flashcard');
+// const asyncHandler = require('../middleware/async');
+
 
 //@desc     Fetch all flashcards from DB
 //@path     GET /api/v1/flashcards
 //@auth     Public
-exports.getFlashcards = (req, res, next) => {
+exports.getFlashcards = async(req, res, next) => {
     try {
-        res 
-            .status(200)
-            .json({
-                success: true,
-                msg: 'Route to get all flashcards'
-            });
-    } catch (err) {
-        res
-            .status(400)
-            .json({
+        const flashcards = await Flashcard.find();
+
+        if(!flashcards){
+            res.status(404).json({
                 success: false,
-                msg: err.message
-            });
+                data: {}
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: flashcards
+        });
+    } catch (err) {
+        console.log(err)
+        next();
     }
 }
 

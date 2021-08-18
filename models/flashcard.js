@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
-const FlashcardSchema = mongoose.Schema({
-    title: {
-        type: String,
-        required: [true, 'Please add a title'],
-        maxLength: [50, 'Title cannot be longer than 50 characters']
-    },
+const FlashcardSchema = new mongoose.Schema({
     question: {
         type: String,
         required: [true, 'Please add a question'],
@@ -13,19 +8,9 @@ const FlashcardSchema = mongoose.Schema({
     },
     answers: {
         type: [String],
-        required: [true, 'Please add some possible answers']
     },
     correctAnswer: {
-        type: String,
-        required: [true, 'Please specify the correct answer']
-    },
-    user: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User'
-    },
-    set: {
-        type: mongoose.Schema.ObjectId,
-        ref: "FlashcardSet"
+        type: String
     },
     createdAt: {
         type: Date,

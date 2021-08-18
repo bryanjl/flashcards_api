@@ -1,40 +1,59 @@
 const mongoose = require('mongoose');
-const Flashcard = require('./models/flashcard');
-const connectDB = require('./config/db');
 const fs = require('fs');
 const dotenv = require('dotenv');
 
+//environment variables to connect to DB
 dotenv.config({ path: './config/config.env' });
 
-// console.log(process.env.MONGODB_URI)
+//load Models
+const FlashcardSet = require('./models/FlashcardSet');
+// const Flashcard = require('./models/Flashcard');
 
+//connect to DB
+mongoose.connect(process.env.MONGODB_URI, {
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+
+//seed DB with data
 const seedDB = async() => {
+    
+    //Read JSON data files
+    const flashcardsets = JSON.parse(fs.readFileSync('./_data/flashcards.json'));    
 
-    const rawData = fs.readFileSync('./_data/flashcards.json');
-    const parseData = JSON.parse(rawData);
-
-    try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI,{
-            useCreateIndex: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useNewUrlParser: true
-        });
-        
-        await Flashcard.create(parseData);
+    try {        
+        await FlashcardSet.create(flashcardsets);
 
         console.log('DATA IMPORTED');
+
+        process.exit();
 
     } catch (err) {
         console.log(err);
     }
 }
 
+//delete all data from DB
+const deleteDB = async() => {
+    try {
+        await FlashcardSet.deleteMany();
+        
+        console.log('DATA Removed');
 
-// console.log(parseData);
+        process.exit();
+    } catch (err) {
+        console.log(err);
+    }
+}
 
-//connectDB();
+if(process.argv[2] === '-i'){
+    seedDB();
+} else if(process.argv[2] === '-d'){
+    deleteDB();
+}
 
-seedDB();
 
 

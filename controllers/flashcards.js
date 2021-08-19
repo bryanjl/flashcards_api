@@ -1,51 +1,40 @@
-const Flashcard = require('../models/flashcard');
-// const asyncHandler = require('../middleware/async');
+const FlashcardSet = require('../models/FlashcardSet');
+const Flashcard = require('../models/Flashcard');
+const ErrorResponse = require('../utils/ErrorResponse');
+const asyncHandler = require('../middleware/async');
 
 
 //@desc     Fetch all flashcards from DB
 //@path     GET /api/v1/flashcards
 //@auth     Public
-exports.getFlashcards = async(req, res, next) => {
-    try {
-        const flashcards = await Flashcard.find();
+exports.getFlashcards = asyncHandler(async (req, res, next) => {
+    const flashcards = await FlashcardSet.find();
 
-        if(!flashcards){
-            res.status(404).json({
-                success: false,
-                data: {}
-            })
-        }
-
-        res.status(200).json({
+    res
+        .status(200)
+        .json({
             success: true,
             data: flashcards
         });
-    } catch (err) {
-        console.log(err)
-        next();
-    }
-}
+});
 
 //@desc     Fetch a single flashcard set by ID
 //@path     GET /api/v1/flashcards/:id
 //@auth     Public
-exports.getFlashcard = (req, res, next)  => {
-    try {
-        res
-            .status(200)
-            .json({
-                success: true,
-                msg: `Get a flashcard set with id of ${req.params.id}`
-            });
-    } catch (err) {
-        res
-            .status(400)
-            .json({
-                success: false,
-                msg: err.message
-            });
+exports.getFlashcard = asyncHandler(async (req, res, next) => {
+    const flashcard = await Flashcard.findById(req.params.id);
+
+    if(!flashcard) {
+        return next(new ErrorResponse(`There is no flashcard with the ID of ${req.params.id}`, 404));
     }
-}
+
+    res 
+        .status(200)
+        .json({
+            success: true,
+            data: flashcard
+        });
+});
 
 //@desc     Create a single flashcard 
 //@path     POST /api/v1/flashcards

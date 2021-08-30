@@ -3,7 +3,7 @@ const express = require('express');
 const {
     getFlashcards,
     getFlashcard,
-    createFlashcard
+    createFlashcardSet
 } = require('../controllers/flashcards');
 
 //use express router
@@ -17,7 +17,7 @@ const router = express.Router();
 router
     .route('/')
     .get(getFlashcards)
-    .post(createFlashcard);
+    .post(createFlashcardSet);
 
 //get flashcard set by id
 router

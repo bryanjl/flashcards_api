@@ -22,7 +22,7 @@ exports.getFlashcards = asyncHandler(async (req, res, next) => {
 //@path     GET /api/v1/flashcards/:id
 //@auth     Public
 exports.getFlashcard = asyncHandler(async (req, res, next) => {
-    const flashcard = await Flashcard.findById(req.params.id);
+    const flashcard = await FlashcardSet.findOne({ flashcards: { $elemMatch: { _id: req.params.id } } }, { "flashcards.$": 1 });
 
     if(!flashcard) {
         return next(new ErrorResponse(`There is no flashcard with the ID of ${req.params.id}`, 404));
@@ -36,23 +36,21 @@ exports.getFlashcard = asyncHandler(async (req, res, next) => {
         });
 });
 
-//@desc     Create a single flashcard 
+//@desc     Create a flashcard set
 //@path     POST /api/v1/flashcards
 //@auth     Public
-exports.createFlashcard = (req, res, next) => {
-    try {
-        res
-            .status(200)
-            .json({
-                success: true,
-                msg: 'Create a new flashcard set'
-            });
-    } catch (err) {
-        res
-            .status(400)
-            .json({
-                success: false,
-                msg: err.message
-            });
-    }
-}
+exports.createFlashcardSet = asyncHandler(async (req, res, next) => {
+    const flashcard = await Flashcard.create(req.body);
+
+    res
+        .status(200)
+        .json({
+            success: true,
+            data: flashcard
+        });
+});
+
+
+//@desc     Create a flashcard
+//@path     POST /api/v1/flashcards
+//@auth     Public

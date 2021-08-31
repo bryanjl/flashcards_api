@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/error');
 
 //bring in project files
 const flashcards = require('./routes/flashcards');
+const users = require('./routes/auth');
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
@@ -26,6 +27,7 @@ if(process.env.NODE_ENV === 'development'){
 
 //mount routers
 app.use('/api/v1/flashcards', flashcards);
+app.use('/api/v1/auth', users);
 
 app.use(errorHandler);
 

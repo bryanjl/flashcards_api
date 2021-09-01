@@ -12,10 +12,12 @@ const users = require('./routes/auth');
 //load env vars
 dotenv.config({ path: './config/config.env' });
 
-const app = express();
 
 //connect to the DB
 connectDB();
+
+
+const app = express();
 
 //body parser for JSON
 app.use(express.json());

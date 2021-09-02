@@ -7,6 +7,7 @@ dotenv.config({ path: './config/config.env' });
 
 //load Models
 const FlashcardSet = require('./models/FlashcardSet');
+const User = require('./models/User');
 // const Flashcard = require('./models/Flashcard');
 
 //connect to DB
@@ -40,6 +41,7 @@ const seedDB = async() => {
 const deleteDB = async() => {
     try {
         await FlashcardSet.deleteMany();
+        await User.deleteMany();
         
         console.log('DATA Removed');
 

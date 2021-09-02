@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = mongoose.Schema({
     email: {
@@ -25,19 +26,23 @@ const UserSchema = mongoose.Schema({
 });
 
 UserSchema.pre('save', async function(next) {
-    //only hash password if its modifed
-    // if(!this.isModifed('password')) {
-    //     return next();
-    // }
+    let user = this;
+    // only hash password if its modifed
+    if(!user.isModifed('password')) {
+        return next();
+    }
 
     //get salt and hash password
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    user.password = await bcrypt.hash(user.password, salt);
 });
 
 UserSchema.methods.matchPassword = async function(enteredPassword) {
-    console.log(`this password: ${this.password} entered ${enteredPassword}`);
     return await bcrypt.compare(enteredPassword.toString(), this.password);
+}
+
+UserSchema.methods.signJWT = function() {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET);
 }
 
 //check if email is valid

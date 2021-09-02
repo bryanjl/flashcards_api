@@ -8,7 +8,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
         token = token.split(' ')[1];
         let decodedToken = jwtDecode(token);
         req.user = decodedToken.id;
-        console.log(req.user);
     }
 
     next();

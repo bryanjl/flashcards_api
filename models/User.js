@@ -22,6 +22,14 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please add a password'],
         select: false
+    },
+    createdFlashcards: {
+        type: [mongoose.Schema.ObjecId],
+        ref: 'FlashcardSets'
+    },
+    savedFlashcards: {
+        type: [mongoose.Schema.ObjecId],
+        ref: 'Flashcard'
     }
 });
 
